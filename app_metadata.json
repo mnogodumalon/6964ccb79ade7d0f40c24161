@@ -1,0 +1,166 @@
+{
+  "appgroup_id": "6964ccb79ade7d0f40c24161",
+  "appgroup_name": "Aufgabenverwaltung",
+  "apps": {
+    "kategorien": {
+      "app_id": "6964cc955a718af89fb4e689",
+      "name": "Kategorien",
+      "controls": {
+        "kategorie_name": {
+          "identifier": "kategorie_name",
+          "label": "Kategoriename",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "beschreibung": {
+          "identifier": "beschreibung",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "farbe": {
+          "identifier": "farbe",
+          "label": "Farbe",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "rot": "Rot",
+            "blau": "Blau",
+            "gruen": "Gr\u00fcn",
+            "gelb": "Gelb",
+            "orange": "Orange",
+            "lila": "Lila",
+            "grau": "Grau"
+          }
+        }
+      }
+    },
+    "aufgaben": {
+      "app_id": "6964cc99fdae809a125528fb",
+      "name": "Aufgaben",
+      "controls": {
+        "titel": {
+          "identifier": "titel",
+          "label": "Aufgabentitel",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "beschreibung": {
+          "identifier": "beschreibung",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "faelligkeitsdatum": {
+          "identifier": "faelligkeitsdatum",
+          "label": "F\u00e4lligkeitsdatum",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`."
+        },
+        "prioritaet": {
+          "identifier": "prioritaet",
+          "label": "Priorit\u00e4t",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "mittel": "Mittel",
+            "hoch": "Hoch",
+            "sehr_hoch": "Sehr hoch",
+            "niedrig": "Niedrig"
+          }
+        },
+        "kategorie": {
+          "identifier": "kategorie",
+          "label": "Kategorie",
+          "type": "applookup",
+          "subtype": "select",
+          "fulltype": "applookup/select",
+          "description": "A reference to another LivingApp record from a target lookup app (or `null`).\n\nThe field value will be a valid record URL in the form `https://<hostname>/rest/apps/<app-id>/records/<record-id>` or `null`.",
+          "lookup_app": "https://my.living-apps.de/rest/apps/6964cc955a718af89fb4e689"
+        },
+        "erledigt": {
+          "identifier": "erledigt",
+          "label": "Erledigt",
+          "type": "bool",
+          "subtype": null,
+          "fulltype": "bool",
+          "description": "A boolean value, i.e. `true` or `false` (or `null`)."
+        }
+      }
+    },
+    "schnellerfassung": {
+      "app_id": "6964cc9a2e896daa6ab6e8e1",
+      "name": "Schnellerfassung",
+      "controls": {
+        "aufgabe_titel": {
+          "identifier": "aufgabe_titel",
+          "label": "Aufgabe",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "aufgabe_beschreibung": {
+          "identifier": "aufgabe_beschreibung",
+          "label": "Notizen",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "aufgabe_faelligkeit": {
+          "identifier": "aufgabe_faelligkeit",
+          "label": "F\u00e4llig am",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`."
+        },
+        "aufgabe_prioritaet": {
+          "identifier": "aufgabe_prioritaet",
+          "label": "Priorit\u00e4t",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "niedrig": "Niedrig",
+            "mittel": "Mittel",
+            "hoch": "Hoch",
+            "sehr_hoch": "Sehr hoch"
+          }
+        },
+        "aufgabe_kategorie": {
+          "identifier": "aufgabe_kategorie",
+          "label": "Kategorie",
+          "type": "applookup",
+          "subtype": "select",
+          "fulltype": "applookup/select",
+          "description": "A reference to another LivingApp record from a target lookup app (or `null`).\n\nThe field value will be a valid record URL in the form `https://<hostname>/rest/apps/<app-id>/records/<record-id>` or `null`.",
+          "lookup_app": "https://my.living-apps.de/rest/apps/6964cc955a718af89fb4e689"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "apps_list": [
+      "Kategorien",
+      "Aufgaben",
+      "Schnellerfassung"
+    ]
+  }
+}
