@@ -5,12 +5,10 @@ import subprocess
 import os
 
 async def main():
-    # 1. Metadaten lesen
-    try:
-        with open("/home/user/app/CLAUDE.md", "r") as f:
-            instructions = f.read()
-    except:
-        print("Kein CLAUDE.md")
+    # Skills and CLAUDE.md are loaded automatically by Claude SDK from cwd
+    # No manual instruction loading needed - the SDK reads:
+    # - /home/user/app/CLAUDE.md (copied from SANDBOX_PROMPT.md)
+    # - /home/user/app/.claude/skills/ (copied from sandbox_skills/)
 
     def run_git_cmd(cmd: str):
         """Executes a Git command and throws an error on failure"""
@@ -148,28 +146,64 @@ async def main():
     )
 
     # 3. Optionen konfigurieren
+    # setting_sources=["project"] is REQUIRED to load CLAUDE.md and .claude/skills/ from cwd
     options = ClaudeAgentOptions(
         system_prompt={
             "type": "preset",
-            "preset": "claude_code",
-            "append": instructions
+            "preset": "claude_code"
         },
+        setting_sources=["project"],  # Required: loads CLAUDE.md and .claude/skills/
         mcp_servers={"deploy_tools": deployment_server},
         permission_mode="acceptEdits",
         allowed_tools=["Bash", "Write", "Read", "Edit", "Glob", "Grep", "Task", "TodoWrite",
         "mcp__deploy_tools__deploy_to_github"
         ],
         cwd="/home/user/app",
-        model="claude-sonnet-4-5-20250929",
+        model="claude-opus-4-5-20251101",
     )
+
+    # User Prompt aus Environment Variable lesen (für /build/continue)
+    user_prompt = os.getenv('USER_PROMPT')
+    
+    if user_prompt:
+        # Continue-Mode: Custom prompt vom User
+        query = f"""🚨 AUFGABE: Du MUSST das existierende Dashboard ändern und deployen!
+
+User-Anfrage: "{user_prompt}"
+
+PFLICHT-SCHRITTE (alle müssen ausgeführt werden):
+
+1. LESEN: Lies src/pages/Dashboard.tsx um die aktuelle Struktur zu verstehen
+2. ÄNDERN: Implementiere die User-Anfrage mit dem Edit-Tool
+3. TESTEN: Führe 'npm run build' aus um sicherzustellen dass es kompiliert
+4. DEPLOYEN: Rufe deploy_to_github auf um die Änderungen zu pushen
+
+⚠️ KRITISCH:
+- Du MUSST Änderungen am Code machen (Edit-Tool verwenden!)
+- Du MUSST am Ende deploy_to_github aufrufen!
+- Beende NICHT ohne zu deployen!
+- Analysieren alleine reicht NICHT - du musst HANDELN!
+
+Das Dashboard existiert bereits. Mache NUR die angeforderten Änderungen, nicht mehr.
+Starte JETZT mit Schritt 1!"""
+        print(f"[LILO] Continue-Mode mit User-Prompt: {user_prompt}")
+    else:
+        # Normal-Mode: Neues Dashboard bauen
+        query = (
+            "Use frontend-design Skill to create analyse app structure and generate design_spec.json"
+            "Build the Dashboard.tsx following design_spec.json exactly. "
+            "Use existing types and services from src/types/ and src/services/. "
+            "Deploy when done using the deploy_to_github tool."
+        )
+        print(f"[LILO] Build-Mode: Neues Dashboard erstellen")
 
     print(f"[LILO] Initialisiere Client")
 
     # 4. Der Client Lifecycle
     async with ClaudeSDKClient(options=options) as client:
-        
+
         # Anfrage senden
-        await client.query("Baue das Dashboard")
+        await client.query(query)
 
         # 5. Antwort-Schleife
         # receive_response() liefert alles bis zum Ende des Auftrags

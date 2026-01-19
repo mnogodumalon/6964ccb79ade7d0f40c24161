@@ -25,7 +25,9 @@ import {
   Calendar,
   Flag,
   Tag,
-  Loader2
+  Loader2,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { format, isAfter, isBefore, startOfDay } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -68,6 +70,30 @@ export default function Dashboard() {
   const [filterPriority, setFilterPriority] = useState<string>('alle');
   const [filterCategory, setFilterCategory] = useState<string>('alle');
   const [filterStatus, setFilterStatus] = useState<string>('alle');
+
+  // Dark Mode
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('darkMode');
+      if (stored !== null) return stored === 'true';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
+
+  // Apply dark mode class to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', String(isDarkMode));
+  }, [isDarkMode]);
+
+  function toggleDarkMode() {
+    setIsDarkMode(prev => !prev);
+  }
 
   // Form State for Quick Entry
   const [formData, setFormData] = useState<Schnellerfassung['fields']>({
@@ -249,14 +275,26 @@ export default function Dashboard() {
             <p className="text-muted-foreground">Überblick über alle deine Aufgaben</p>
           </div>
 
-          {/* Quick Entry Dialog */}
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="w-full md:w-auto">
-                <PlusCircle className="mr-2 h-5 w-5" />
-                Neue Aufgabe
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2 w-full md:w-auto">
+            {/* Dark Mode Toggle */}
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={toggleDarkMode}
+              className="shrink-0"
+              aria-label={isDarkMode ? 'Zum hellen Modus wechseln' : 'Zum dunklen Modus wechseln'}
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+
+            {/* Quick Entry Dialog */}
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="flex-1 md:flex-none">
+                  <PlusCircle className="mr-2 h-5 w-5" />
+                  Neue Aufgabe
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Schnellerfassung</DialogTitle>
@@ -351,7 +389,8 @@ export default function Dashboard() {
                 </div>
               </form>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          </div>
         </div>
       </div>
 
